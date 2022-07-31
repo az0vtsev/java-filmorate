@@ -5,8 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.UserController;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exception.NoSuchUserException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -18,8 +21,8 @@ class UserValidationTests {
 
     private UserController uController;
     static private String name;
-    static private String login = "login";
-    static private String email = "test@yandex.ru";
+    static private String login;
+    static private String email;
     static private LocalDate date = LocalDate.of(1999, 10, 5);
 
     @BeforeAll
@@ -32,7 +35,7 @@ class UserValidationTests {
 
     @BeforeEach
     public void createController() {
-        uController = new UserController();
+        uController = new UserController(new UserService(new InMemoryUserStorage()));
     }
 
     @Test
@@ -111,11 +114,11 @@ class UserValidationTests {
         User updateUser3 = new User(-1,"update name", login, email, date);
         try {
             uController.update(updateUser1);
-        } catch (ValidationException e) {
+        } catch (ValidationException | NoSuchUserException e) {
             System.out.println(e.getMessage());
         }
         assertEquals(updateUser1, uController.getUsers().get(0));
-        assertThrows(ValidationException.class, () -> uController.update(updateUser2));
-        assertThrows(ValidationException.class, () -> uController.update(updateUser3));
+        assertThrows(NoSuchUserException.class, () -> uController.update(updateUser2));
+        assertThrows(NoSuchUserException.class, () -> uController.update(updateUser3));
     }
 }

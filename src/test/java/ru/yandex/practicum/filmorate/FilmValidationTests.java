@@ -6,8 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exception.NoSuchFilmException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -23,9 +27,10 @@ public class FilmValidationTests {
     private static int duration;
 
     @BeforeEach
-    public void create() {
-        fController = new FilmController();
+    public void createController(){
+        fController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
     }
+
 
     @BeforeAll
     public static void createFields() {
@@ -118,11 +123,11 @@ public class FilmValidationTests {
         Film updateFilm3 = new Film(-1, name, description, date, 100);
         try {
             fController.update(updateFilm1);
-        } catch (ValidationException e) {
+        } catch (NoSuchFilmException | ValidationException e) {
             System.out.println(e.getMessage());
         }
         assertEquals(updateFilm1, fController.getFilms().get(0));
-        assertThrows(ValidationException.class, () -> fController.update(updateFilm2));
-        assertThrows(ValidationException.class, () -> fController.update(updateFilm3));
+        assertThrows(NoSuchFilmException.class, () -> fController.update(updateFilm2));
+        assertThrows(NoSuchFilmException.class, () -> fController.update(updateFilm3));
     }
 }
