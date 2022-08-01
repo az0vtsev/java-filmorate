@@ -17,8 +17,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    LocalDate VALIDATE_RELEASE_DATE = LocalDate.of(1895, 12, 28);
-    int DEFAULT_FILMS_COUNT = 10;
+    public static final LocalDate VALIDATE_RELEASE_DATE = LocalDate.of(1895, 12, 28);
+    public static final int DEFAULT_FILMS_COUNT = 10;
     private final FilmService service;
 
     @Autowired
