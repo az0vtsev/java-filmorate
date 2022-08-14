@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.NoSuchFilmException;
+import ru.yandex.practicum.filmorate.exception.NoSuchMpaRatingException;
 import ru.yandex.practicum.filmorate.exception.NoSuchUserException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -30,12 +31,12 @@ public class FilmController {
     public Film getFilm(@PathVariable int id) throws NoSuchFilmException {
         log.info("GET /films/" + id +" request received");
         Film film = service.getFilmById(id);
-        log.info("GET /films/" + id +" request received");
+        log.info("GET /films/" + id +" request done");
         return film;
     }
 
     @GetMapping
-    public List<Film> getFilms(){
+    public List<Film> getFilms() throws NoSuchMpaRatingException{
         log.info("GET /films request received");
         List<Film> list = service.getFilms();
         log.info("GET /films request done");
@@ -43,7 +44,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) throws ValidationException {
+    public Film create(@RequestBody Film film) throws ValidationException, NoSuchMpaRatingException {
         log.info("POST /films request received");
         Film addFilm;
         if (isValid(film)) {
@@ -94,7 +95,7 @@ public class FilmController {
         log.info("DELETE /films/like request done");
     }
     @GetMapping(value="/popular")
-    public List<Film> getPopularFilms(@RequestParam(required = false) Integer count) {
+    public List<Film> getPopularFilms(@RequestParam(required = false) Integer count) throws NoSuchMpaRatingException {
         return service.getPopularFilms(Objects.requireNonNullElseGet(count, () -> DEFAULT_FILMS_COUNT));
     }
 

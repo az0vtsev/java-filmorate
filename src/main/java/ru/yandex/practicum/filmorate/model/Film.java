@@ -2,10 +2,10 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.NonNull;
-import ru.yandex.practicum.filmorate.exception.NoSuchUserException;
 
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -14,27 +14,22 @@ public class Film {
     @NonNull
     private final String name;
     @NonNull
-    private final String description;
-    @NonNull
     private final LocalDate releaseDate;
-
+    @NonNull
+    private final String description;
     private final int duration;
-    private Set<Integer> likes = new HashSet<>();
+    @NonNull
+    private final MpaRating mpa;
+    private final Set<Genre> genres;
+    private final Set<Integer> likes;
 
-    private int likesCount = 0;
-
-    public void addLike(int  userId) {
-        likes.add(userId);
-        likesCount++;
-    }
-
-    public void deleteLike(int  userId) throws NoSuchUserException {
-        if (likes.contains(userId)) {
-            likes.remove(userId);
-            likesCount--;
-        } else {
-            throw new NoSuchUserException("User with id="+ userId+" doesn't add like");
-        }
-
+    public Map<String, Object> toMap() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("name", name);
+        values.put("description", description);
+        values.put("release_date", releaseDate);
+        values.put("duration", duration);
+        values.put("mpa", mpa.getId());
+        return values;
     }
 }

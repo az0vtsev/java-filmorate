@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @Component("inMemoryUserStorage")
@@ -19,16 +20,14 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User create(User user){
-        User addUser;
+        String name = user.getName();
+        if (name.isEmpty()) {
+            name = user.getLogin();
+        }
+        User addUser = new User(getNextId(), name, user.getLogin(), user.getEmail(),
+                user.getBirthday(), new HashSet<>());
 
-            if (user.getName().isEmpty()) {
-                addUser = new User(getNextId(), user.getLogin(),
-                        user.getLogin(), user.getEmail(), user.getBirthday());
-            } else {
-                addUser = new User(getNextId(), user.getName(),
-                        user.getLogin(), user.getEmail(), user.getBirthday());
-            }
-            users.put(addUser.getId(), addUser);
+        users.put(addUser.getId(), addUser);
 
         return addUser;
     }

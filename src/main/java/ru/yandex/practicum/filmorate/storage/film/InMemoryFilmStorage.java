@@ -20,8 +20,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        Film addFilm = new Film(getNextId(), film.getName(),
-                    film.getDescription(), film.getReleaseDate(), film.getDuration());
+        Film addFilm = new Film(getNextId(), film.getName(), film.getReleaseDate(),
+                    film.getDescription(),  film.getDuration(), film.getMpa(),
+                film.getGenres(), film.getLikes());
         films.put(addFilm.getId(), addFilm);
         return addFilm;
     }
