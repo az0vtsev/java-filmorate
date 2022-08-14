@@ -24,7 +24,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (name.isEmpty()) {
             name = user.getLogin();
         }
-        User addUser = new User(getNextId(), name, user.getLogin(), user.getEmail(),
+        User addUser = new User(getNextId(),  user.getLogin(), name, user.getEmail(),
                 user.getBirthday(), new HashSet<>());
 
         users.put(addUser.getId(), addUser);

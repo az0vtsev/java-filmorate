@@ -43,9 +43,9 @@ class UserValidationTests {
     void ShouldValidateUserEmail(){
         String email2 = " ";
         String email3 = "testyandex.ru";
-        User user1 = new User(1, name, login, email, date, new HashSet<>());
-        User user2 = new User(2, name, login, email2, date, new HashSet<>());
-        User user3 = new User(3, name, login, email3, date, new HashSet<>());
+        User user1 = new User(1, login,  name, email, date, new HashSet<>());
+        User user2 = new User(2, login, name,  email2, date, new HashSet<>());
+        User user3 = new User(3, login, name, email3, date, new HashSet<>());
         try {
             uController.create(user1);
         } catch (ValidationException e) {
@@ -60,9 +60,9 @@ class UserValidationTests {
     void ShouldValidateLogin() {
         String login2 = "";
         String login3 = "lo gin";
-        User user1 = new User(1, name, login, email, date, new HashSet<>());
-        User user2 = new User(2, name, login2, email, date, new HashSet<>());
-        User user3 = new User(3, name, login3, email, date, new HashSet<>());
+        User user1 = new User(1, login,  name,  email, date, new HashSet<>());
+        User user2 = new User(2, login2, name , email, date, new HashSet<>());
+        User user3 = new User(3, login3, name,  email, date, new HashSet<>());
         try {
             uController.create(user1);
         } catch (ValidationException e) {
@@ -75,7 +75,7 @@ class UserValidationTests {
 
     @Test
     void ShouldUseLoginAsNameIfNameIsEmpty() {
-        User user1 = new User(1, "",login, email, date, new HashSet<>());
+        User user1 = new User(1, login, "", email, date, new HashSet<>());
         try {
             uController.create(user1);
         } catch (ValidationException e) {
@@ -87,8 +87,8 @@ class UserValidationTests {
     @Test
     void ShouldValidateBirthday(){
         LocalDate date2 = LocalDate.of(2023, 10, 5);
-        User user1 = new User(1, name, login, email, date, new HashSet<>());
-        User user2 = new User(2, name,login, email, date2, new HashSet<>());
+        User user1 = new User(1, login, name,  email, date, new HashSet<>());
+        User user2 = new User(2, login, name,  email, date2, new HashSet<>());
         try {
             uController.create(user1);
         } catch (ValidationException e) {
@@ -100,9 +100,9 @@ class UserValidationTests {
 
     @Test
     void ShouldValidateId(){
-        User user1 = new User(1, name, login, email, date, new HashSet<>());
-        User user2 = new User(2, name, login, email, date, new HashSet<>());
-        User user3 = new User(3, name, login, email, date, new HashSet<>());
+        User user1 = new User(1, login, name,  email, date, new HashSet<>());
+        User user2 = new User(2, login, name,  email, date, new HashSet<>());
+        User user3 = new User(3, login, name,  email, date, new HashSet<>());
         try {
             uController.create(user1);
             uController.create(user2);
@@ -110,9 +110,9 @@ class UserValidationTests {
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
-        User updateUser1 = new User(1, "update name", login, email, date, new HashSet<>());
-        User updateUser2 = new User(0, "update name", login, email, date, new HashSet<>());
-        User updateUser3 = new User(-1,"update name", login, email, date, new HashSet<>());
+        User updateUser1 = new User(1, login, "update name", email, date, new HashSet<>());
+        User updateUser2 = new User(0, login, "update name", email, date, new HashSet<>());
+        User updateUser3 = new User(-1,login, "update name", email, date, new HashSet<>());
         try {
             uController.update(updateUser1);
         } catch (ValidationException | NoSuchUserException e) {

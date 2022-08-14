@@ -50,7 +50,7 @@ public class FilmValidationTests {
         String name2 = "";
         Film film1 = new Film(1, name, date, description, duration,
                 new MpaRating(1, "G"), new HashSet<>(), new HashSet<>());
-        Film film2= new Film(2, name, date, description, duration,
+        Film film2= new Film(2, name2, date, description, duration,
                 new MpaRating(1, "G"), new HashSet<>(), new HashSet<>());
         try {
             fController.create(film1);
@@ -73,7 +73,7 @@ public class FilmValidationTests {
         String description2 = sb.toString();
         Film film1 = new Film(1,name, date, description, duration,
                 new MpaRating(1, "G"), new HashSet<>(), new HashSet<>());
-        Film film2 = new Film(2, name, date, description, duration,
+        Film film2 = new Film(2, name, date, description2, duration,
                 new MpaRating(1, "G"), new HashSet<>(), new HashSet<>());
         try {
             fController.create(film1);
@@ -92,9 +92,9 @@ public class FilmValidationTests {
         LocalDate date3 = LocalDate.of(1700, 10, 5);
         Film film1 = new Film(1, name, date, description, duration,
                 new MpaRating(1, "G"), new HashSet<>(), new HashSet<>());
-        Film film2= new Film(2, name, date, description, duration,
+        Film film2= new Film(2, name, date2, description, duration,
                 new MpaRating(1, "G"), new HashSet<>(), new HashSet<>());
-        Film film3= new Film(3, name, date, description, duration,
+        Film film3= new Film(3, name, date3, description, duration,
                 new MpaRating(1, "G"), new HashSet<>(), new HashSet<>());
         try {
             fController.create(film1);
