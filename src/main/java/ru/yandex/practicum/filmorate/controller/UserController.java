@@ -29,6 +29,14 @@ public class UserController {
         return user;
     }
 
+    @GetMapping
+    public List<User> getUsers() {
+        log.info("GET /users request received");
+        List<User> list = service.getUsers();
+        log.info("GET /users request done");
+        return list;
+    }
+
     @PostMapping
     public User create(@RequestBody User user) throws ValidationException{
         log.info("POST /users request received");
@@ -63,14 +71,6 @@ public class UserController {
         User deleteUser = service.deleteUser(id);
         log.info("DELETE /users request done");
         return deleteUser;
-    }
-
-    @GetMapping
-    public List<User> getUsers() {
-        log.info("GET /users request received");
-        List<User> list = service.getStorage().getUsers();
-        log.info("GET /users request done");
-        return list;
     }
 
     @PutMapping(value="/{id}/friends/{friendId}")

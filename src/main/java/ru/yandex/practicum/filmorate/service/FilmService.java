@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NoSuchFilmException;
+import ru.yandex.practicum.filmorate.exception.NoSuchMpaRatingException;
 import ru.yandex.practicum.filmorate.exception.NoSuchUserException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -18,13 +19,13 @@ public class FilmService {
    private final UserStorage userStorage;
 
    @Autowired
-   public FilmService(@Qualifier("inMemoryFilmStorage") FilmStorage storage,
-                      @Qualifier("inMemoryUserStorage") UserStorage userStorage) {
+   public FilmService(@Qualifier("filmDBStorage") FilmStorage storage,
+                      @Qualifier("userDBStorage") UserStorage userStorage) {
        this.storage = storage;
        this.userStorage = userStorage;
    }
 
-   public Film createFilm(Film film) {
+   public Film createFilm(Film film) throws NoSuchMpaRatingException {
       return storage.create(film);
    }
 
@@ -40,25 +41,33 @@ public class FilmService {
       return storage.getFilmById(id);
    }
 
-   public List<Film> getFilms() {
+   public List<Film> getFilms() throws NoSuchMpaRatingException {
        return storage.getFilms();
    }
 
    public void addLike(int id, int userId) throws NoSuchFilmException, NoSuchUserException {
       userStorage.getUserById(userId);
       Film film = storage.getFilmById(id);
-      film.addLike(userId);
+      if (!film.getLikes().contains(userId)) {
+         film.getLikes().add(userId);
+         storage.update(film);
+      }
    }
 
    public void deleteLike(int id, int userId) throws NoSuchFilmException, NoSuchUserException {
       userStorage.getUserById(userId);
       Film film = storage.getFilmById(id);
-      film.deleteLike(userId);
+      if (film.getLikes().contains(userId)) {
+         film.getLikes().remove(userId);
+         storage.update(film);
+      } else {
+         throw new NoSuchUserException("User with id="+ userId+" doesn't add like");
+      }
    }
 
-   public List<Film> getPopularFilms(int count) {
+   public List<Film> getPopularFilms(int count) throws NoSuchMpaRatingException {
       return storage.getFilms().stream()
-              .sorted((film1, film2) -> film2.getLikesCount() - film1.getLikesCount())
+              .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
               .limit(count)
               .collect(Collectors.toList());
    }
